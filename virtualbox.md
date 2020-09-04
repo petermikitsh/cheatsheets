@@ -29,3 +29,15 @@ vboxmanage modifyvm "nameOfVM" --memory 8192
 ```
 vboxmanage unattended install "nameOfVM" --install-additions --iso=/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso
 ```
+
+## Enable 2d acceleration
+
+```
+VBoxManage modifyvm "nameOfVM" --accelerate2dvideo on
+```
+
+## Enable 3d acceleration
+
+```
+VBoxManage modifyvm "nameOfVM" --accelerate3d on
+```
