@@ -11,3 +11,21 @@ vboxmanage modifyvm "nameOfVM" --vram 256
 ```
 VBoxManage setextradata "nameOfVM" GUI/ScaleFactor 2
 ```
+
+## Add additional CPUs (6)
+
+```
+VBoxManage modifyvm "nameOfVM" --cpus 6
+```
+
+## Add additional RAM (8 GB)
+
+```
+vboxmanage modifyvm "nameOfVM" --memory 8192
+```
+
+## Install Guest Additions 
+
+```
+vboxmanage unattended install "nameOfVM" --install-additions --iso=/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso
+```
