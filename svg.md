@@ -33,3 +33,36 @@ Specifying `viewBox` is helpful when manually setting height and/or width on an 
 - Open SVG in Inkscape
 - Save As > Optimized SVG
 - On "SVG Output" tab, check `Enable viewboxing`
+
+
+## Animated, infinitely repeating gradient
+
+- https://codepen.io/hujambo-dunia/pen/jaxLZw
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" version="1.1" viewBox="0 0 200 50">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0">
+      <stop offset="0%" style="stop-color: red;" />
+      <stop offset="14.28%" style="stop-color: orange;" />
+      <stop offset="28.57%" style="stop-color: yellow;" />
+      <stop offset="42.85%" style="stop-color: green;" />
+      <stop offset="57.14%" style="stop-color: blue;" />
+      <stop offset="71.42%" style="stop-color: indigo;" />
+      <stop offset="85.71%" style="stop-color: violet;" />
+      <stop offset="100%" style="stop-color: red;" />
+    </linearGradient>
+    <pattern id="pattern" x="0" y="0" width="300%" height="100%">
+      <rect x="0" y="0" width="150%" height="100%" fill="url(#gradient)">
+        <animate attributeName="x" from="0" to="150%" dur="2.5s" repeatCount="indefinite" />
+      </rect>
+      <rect x="-150%" y="0" width="150%" height="100%" fill="url(#gradient)">
+        <animate attributeName="x" from="-150%" to="0" dur="2.5s" repeatCount="indefinite" />
+      </rect>
+    </pattern>
+  </defs>
+  <g fill="url(#pattern)">
+    <rect x="0" y="0" width="200" height="50" />
+  </g>
+</svg>
+```
