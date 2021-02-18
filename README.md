@@ -4,12 +4,21 @@ A personal collection of incantations for various technologies.
 
 # AWS CLI
 
+## ECR login
+
+```
+PROFILE=stg
+REGISTRY_ID=123123123123
+aws ecr get-login-password --region us-west-2 --profile $PROFILE | docker login --username AWS --password-stdin $REGISTRY_ID.dkr.ecr.us-west-2.amazonaws.com
+```
+
 ## Get ECR image versions for `myorg/myimage` sorted by creation date
 
 Outputs a JSON string array. Useful for creating a Jenkins UI to pick a release version.
 
 ```
-aws ecr describe-images --repository-name myorg/myimage \
+REPO_NAME=myorg/myimage
+aws ecr describe-images --repository-name $REPO_NAME \
   --profile=stg --region=us-west-2 \
   --query 'reverse(sort_by(imageDetails,& imagePushedAt))' | \
   jq 'map(.imageTags) | add'
@@ -62,7 +71,32 @@ Enabling this setting is helpful for spotting duplicate, nested scrollbars in HT
 
 Source: https://heresthethingblog.com/2015/03/10/mac-tip-macs-scroll-bars
 
+# NodeJS
+
+## Increase Memory Limit (16gb)
+
+Add to `~/.bash_profile`:
+
+```
+export NODE_OPTIONS=--max_old_space_size=16384
+```
+
 # OS Commands
+
+## Self-signed SSL Cert one-liner
+
+Useful for spinning up an https server.
+
+```
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem -batch -subj '/CN=0.0.0.0/C=US'
+```
+
+To start server:
+
+```
+npm i -g http-server
+http-server -S -C cert.pem --cors
+```
 
 ## Delete directories by glob pattern
 
