@@ -81,6 +81,92 @@ Add to `~/.bash_profile`:
 export NODE_OPTIONS=--max_old_space_size=16384
 ```
 
+## Mount and unmount RAM drive
+
+For better File I/O (npm install, etc).
+
+Usage:
+
+```bash
+npm run mount # Move folder to RAM disk
+# ...Do work...
+npm run mount # Move folder back to HDD
+```
+
+package.json:
+```json
+{
+  "scripts": {
+    "mount": "./scripts/mount.sh",
+    "unmount": "./scrips/unmount.sh",
+  }
+}
+```
+
+scripts/mount.sh:
+```bash
+#!/usr/bin/env bash
+
+# Log Each command
+set -x
+
+DISK_NAME=ExampleRAMDisk
+REPO_ROOT="$(dirname $( cd "$(dirname "$0")" ; pwd -P ))"
+REPO_FOLDER_NAME="$(dirname $REPO_ROOT)"
+
+# Test for existence of RAM disk (0 = exists)
+diskutil info /Volumes/$DISK_NAME >> /dev/null
+RAMDISK_EXISTS=$?
+
+if [[ $RAMDISK_EXISTS != "0" ]]; then
+  echo "No RAMDisk. Provisioning..."
+  # 8 GB Ram Disk mounted at /Volumes/$DISK_NAME
+  diskutil erasevolume HFS+ '$DISK_NAME' `hdiutil attach -nobrowse -nomount ram://16777216`
+  # recursively remove all node_modules folders and typescript cache files
+  find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+  cd ..
+  mv $REPO_ROOT /Volumes/$DISK_NAME
+  ln -s /Volumes/$DISK_NAME/$REPO_FOLDER_NAME $REPO_ROOT
+  cd $REPO_ROOT
+  rm .original_path
+  echo "$REPO_ROOT" > .original_path
+  exec bash -l # Resets PWD
+else
+  echo "RAMDisk exists. Skipping provisioning."
+  exit 0
+fi
+```
+
+scripts/unmount.sh:
+```bash
+#!/usr/bin/env bash
+
+# Log Each command
+set -x
+
+REPO_ROOT="$(cat .original_path)"
+DISK_NAME=ExampleRAMDisk
+REPO_FOLDER_NAME="$(dirname $REPO_ROOT)"
+
+if [[ -z "$REPO_ROOT" ]]; then
+  echo "Not sure where to restore repo back to."
+  exit 1
+fi
+
+rm $REPO_ROOT
+
+# recursively remove all node_modules folders
+find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+
+mv /Volumes/$DISK_NAME/$REPO_FOLDER_NAME $REPO_ROOT
+rm -rf /Volumes/$DISK_NAME/**
+
+cd ~
+cd $REPO_ROOT
+diskutil unmountDisk force /Volumes/$DISK_NAME/ &
+exec bash -l # Resets PWD
+```
+
 # OS Commands
 
 ## Self-signed SSL Cert one-liner
