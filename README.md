@@ -90,7 +90,7 @@ Usage:
 ```bash
 npm run mount # Move folder to RAM disk
 # ...Do work...
-npm run mount # Move folder back to HDD
+npm run unmount # Move folder back to HDD
 ```
 
 package.json:
