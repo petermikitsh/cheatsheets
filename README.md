@@ -192,6 +192,27 @@ Useful for clearing unused folders on `gh-pages` branches.
 find . -type d -name "*-canary-*" -exec rm -rf {} \;
 ```
 
+## Use `jq` to edit import maps
+
+Useful for updating import map files from a CI/CD pipeline. This will work for over-writing an existing map, or adding a new one.
+
+```bash
+echo '{"imports":{}}' > importmap.json
+ARTIFACT_NAME=@myorg/microfrontend
+SEMVER=0.1.2
+jq --arg artName "$ARTIFACT_NAME" --arg semVer "$SEMVER" '.imports[$artName] = "//cdn.company.com/" + $artName + "/" + $semVer + "/main.js"' importmap.json
+```
+
+Output:
+
+```json
+{
+  "imports": {
+    "@myorg/microfrontend": "//cdn.company.com/@myorg/microfrontend/0.1.2/main.js"
+  }
+}
+```
+
 # SSH
 
 ## Persist key password
