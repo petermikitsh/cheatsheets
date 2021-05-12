@@ -169,6 +169,32 @@ exec bash -l # Resets PWD
 
 # OS Commands
 
+## Disk Space Commands
+
+### Which file system a folder belongs to
+
+```
+df .
+```
+
+### Size of all non-hidden files in a directory
+
+```
+sudo du -sh * | sort -n
+```
+
+### Size of all directories
+
+```
+sudo du -sh .[!.]* * | sort -n
+```
+
+### Size of all file systems
+
+```
+sudo df -h
+```
+
 ## Self-signed SSL Cert one-liner
 
 Useful for spinning up an https server.
