@@ -319,6 +319,10 @@ Specifying `viewBox` is helpful when manually setting height and/or width on an 
 
 # VirtualBox
 
+## Access Server on Host from Guest
+
+Use IP Address `10.0.2.2:{portNumber}`.
+
 ## Increase Graphics memory beyond GUI max of 128 MB (to 256 MB)
 
 ```
